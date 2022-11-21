@@ -4,6 +4,9 @@ This is similar to the fullstack [kafka docker-compose deployment](https://githu
 
 ## Notes
 
+May need to manually restart `bookie2` and `bookie3` depending on start timing.
+
+
 ### Requirements
 1. docker
 2. docker-compose
@@ -14,10 +17,10 @@ This is similar to the fullstack [kafka docker-compose deployment](https://githu
   git clone https://github.com/rudh24/pulsar-stack-docker-compose
   cd pulsar-stack-docker-compose/
   docker-compose up -d
-  
+
   bash down.sh -> tears down the cluster and removes the volumes
 ```
-  Pulsar brokers are exposed via the proxy at 
+  Pulsar brokers are exposed via the proxy at
   ```
     http://localhost:8080 - web service
     pulsar://localhost:6650 - pulsar service

@@ -1,8 +1,10 @@
+# https://stackoverflow.com/questions/59389702/apache-pulsar-cluster-setup-multi-broker-in-local-machine
+# https://github.com/rudh24/pulsar-stack-docker-compose
 version: '2.1'
 
 services:
   zoo1:
-    image: apachepulsar/pulsar:2.4.1
+    image: apachepulsar/pulsar:2.10.0
     hostname: zoo1
     ports:
       - "2181:2181"
@@ -10,14 +12,14 @@ services:
         ZK_ID: 1
         PULSAR_ZK_CONF: /conf/zookeeper.conf
     volumes:
-      - ./zoo1/data:/pulsar/data/zookeeper/
-      - ./zoo1/log/:/pulsar/logs
+      # - ./zoo1/data:/pulsar/data/zookeeper/
+      # - ./zoo1/log/:/pulsar/logs
       - ./conf:/conf
       - ./scripts:/scripts
     command: /bin/bash "/scripts/start_zk.sh"
-    
+
   zoo2:
-    image: apachepulsar/pulsar:2.4.1
+    image: apachepulsar/pulsar:2.10.0
     hostname: zoo2
     ports:
       - "2182:2181"
@@ -26,14 +28,14 @@ services:
         PULSAR_ZK_CONF: /conf/zookeeper.conf
     volumes:
     volumes:
-      - ./zoo2/data:/pulsar/data/zookeeper/
-      - ./zoo2/log/:/pulsar/logs
+      # - ./zoo2/data:/pulsar/data/zookeeper/
+      # - ./zoo2/log/:/pulsar/logs
       - ./conf:/conf
       - ./scripts:/scripts
     command: /bin/bash "/scripts/start_zk.sh"
 
   zoo3:
-    image: apachepulsar/pulsar:2.4.1
+    image: apachepulsar/pulsar:2.10.0
     hostname: zoo3
     ports:
       - "2183:2181"
@@ -41,22 +43,22 @@ services:
         ZK_ID: 3
         PULSAR_ZK_CONF: /conf/zookeeper.conf
     volumes:
-      - ./zoo3/data:/pulsar/data/zookeeper/
-      - ./zoo3/log/:/pulsar/logs
+      # - ./zoo3/data:/pulsar/data/zookeeper/
+      # - ./zoo3/log/:/pulsar/logs
       - ./conf:/conf
       - ./scripts:/scripts
     command: /bin/bash "/scripts/start_zk.sh"
 
   bookie1:
-    image: apachepulsar/pulsar:2.4.1
+    image: apachepulsar/pulsar:2.10.0
     hostname: bookie1
     ports:
       - "3181:3181"
     environment:
         BOOKIE_CONF: /conf/bookkeeper.conf
     volumes:
-      - ./bookie1/data:/pulsar/data/bookkeeper/
-      - ./bookie1/log/:/pulsar/logs
+      # - ./bookie1/data:/pulsar/data/bookkeeper/
+      # - ./bookie1/log/:/pulsar/logs
       - ./conf:/conf
       - ./scripts:/scripts
     command: /bin/bash "/scripts/start_mainbk.sh"
@@ -66,39 +68,43 @@ services:
       - zoo3
 
   bookie2:
-    image: apachepulsar/pulsar:2.4.1
+    image: apachepulsar/pulsar:2.10.0
     hostname: bookie2
     ports:
       - "3182:3181"
     environment:
         BOOKIE_CONF: /conf/bookkeeper.conf
     volumes:
-      - ./bookie2/data:/pulsar/data/bookkeeper/
-      - ./bookie2/log/:/pulsar/logs
+      # - ./bookie2/data:/pulsar/data/bookkeeper/
+      # - ./bookie2/log/:/pulsar/logs
       - ./conf:/conf
       - ./scripts:/scripts
-    command: /bin/bash "/scripts/start_otherbk.sh"
+    command: |
+      sleep 15
+      /bin/bash "/scripts/start_otherbk.sh"
     depends_on:
       - bookie1
 
   bookie3:
-    image: apachepulsar/pulsar:2.4.1
+    image: apachepulsar/pulsar:2.10.0
     hostname: bookie3
     ports:
       - "3183:3181"
     environment:
         BOOKIE_CONF: /conf/bookkeeper.conf
     volumes:
-      - ./bookie3/data:/pulsar/data/bookkeeper/
-      - ./bookie3/log/:/pulsar/logs
+      # - ./bookie3/data:/pulsar/data/bookkeeper/
+      # - ./bookie3/log/:/pulsar/logs
       - ./conf:/conf
       - ./scripts:/scripts
-    command: /bin/bash "/scripts/start_otherbk.sh"
+    command: |
+      sleep 15
+      /bin/bash "/scripts/start_otherbk.sh"
     depends_on:
       - bookie1
 
   broker1:
-    image: apachepulsar/pulsar:2.4.1
+    image: apachepulsar/pulsar:2.10.0
     hostname: broker1
     environment:
         PULSAR_BROKER_CONF: /conf/broker.conf
@@ -106,8 +112,8 @@ services:
       - "6660:6650"
       - "8090:8080"
     volumes:
-      - ./broker1/data:/pulsar/data/broker/
-      - ./broker1/log/:/pulsar/logs
+      # - ./broker1/data:/pulsar/data/broker/
+      # - ./broker1/log/:/pulsar/logs
       - ./conf:/conf
       - ./scripts:/scripts
     command: /bin/bash "/scripts/start_broker.sh"
@@ -117,7 +123,7 @@ services:
       - bookie3
 
   broker2:
-    image: apachepulsar/pulsar:2.4.1
+    image: apachepulsar/pulsar:2.10.0
     hostname: broker2
     environment:
         PULSAR_BROKER_CONF: /conf/broker.conf
@@ -125,8 +131,8 @@ services:
       - "6661:6650"
       - "8091:8080"
     volumes:
-      - ./broker2/data:/pulsar/data/broker/
-      - ./broker2/log/:/pulsar/logs
+      # - ./broker2/data:/pulsar/data/broker/
+      # - ./broker2/log/:/pulsar/logs
       - ./conf:/conf
       - ./scripts:/scripts
     command: /bin/bash "/scripts/start_broker.sh"
@@ -136,7 +142,7 @@ services:
       - bookie3
 
   pulsar-proxy:
-    image: apachepulsar/pulsar:2.4.1
+    image: apachepulsar/pulsar:2.10.0
     hostname: pulsar-proxy
     ports:
       - "6650:6650"
@@ -144,7 +150,7 @@ services:
     environment:
         PULSAR_PROXY_CONF: "/conf/proxy.conf"
     volumes:
-      - ./proxy/log/:/pulsar/logs
+      # - ./proxy/log/:/pulsar/logs
       - ./conf:/conf
       - ./scripts:/scripts
     command: /bin/bash "/scripts/start_proxy.sh"
